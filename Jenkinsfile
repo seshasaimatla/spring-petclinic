@@ -10,8 +10,13 @@ pipeline {
             steps {
                 sh 'mvn package'
             }
+        }
+        stage('post build') {
+            steps {
+                junit  testResults: '**/surefire-reports/*.xml'
+            }
         }    
     }
-}    
+}
 
     
