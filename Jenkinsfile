@@ -6,9 +6,22 @@ pipeline {
                 git url: 'https://github.com/seshasaimatla/spring-petclinic.git', branch: 'main' 
             }
         }
-        stage('build') {
+         stage ('Artifactory configuration') {
             steps {
-                sh 'mvn package'
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                )
+            }
+         }
+
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: MAVEN-3.8.6, // Tool name from Jenkins configuration
+                    pom: 'pom.xml',
+                    goals: 'package',
+                    deployerId: "MAVEN_DEPLOYER"
+                )
             }
         }
         stage('post build') {
